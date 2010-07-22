@@ -380,3 +380,70 @@ test("Failed AddAndResubscribe With Customer Fields", function() {
   }
   expect(12);
 });
+
+test("Successful Unsubscribe", function() {
+  mockedXHR.mockedResponse = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Subscriber.UnsubscribeResponse xmlns="http://api.createsend.com/api/"><Subscriber.UnsubscribeResult><Code>0</Code><Message>Success</Message></Subscriber.UnsubscribeResult></Subscriber.UnsubscribeResponse></soap:Body></soap:Envelope>';
+  CampaignMonitor.apiKey = 'ABCDE1234567890';
+
+  subscriber = new CampaignMonitor.Subscriber('myles@madpilot.com.au', 'Myles Eftos');
+  subscriber.unsubscribe('12345', function(result) {
+    equals(result.code, 0, "result.code");
+    equals(result.message, "Success", "result.message");
+    equals(result.success, true, "success");
+  });
+
+  xmlDoc = mockedXHR.bodyAsXML();
+  
+  body = xmlDoc.evaluate('/soap:Envelope/soap:Body/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
+  equals(body.iterateNext().tagName, "Subscriber.Unsubscribe", "Remote Method called");
+  
+  body = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
+  while(res = body.iterateNext()) {
+    switch(res.tagName) {
+      case 'ApiKey':
+        equals(res.textContent, 'ABCDE1234567890', 'API Key');
+        break;
+      case 'ListID':
+        equals(res.textContent, '12345', 'List ID');
+        break;
+      case 'email':
+        equals(res.textContent, 'myles@madpilot.com.au', 'Email');
+        break;
+    }
+  }
+  
+  expect(7);
+});
+
+test("Failed Unsubscribe", function() {
+  mockedXHR.mockedResponse = '<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Subscriber.UnsubscribeResponse xmlns="http://api.createsend.com/api/"><Subscriber.UnsubscribeResult><Code>100</Code><Message>Invalid API Key</Message></Subscriber.UnsubscribeResult></Subscriber.UnsubscribeResponse></soap:Body></soap:Envelope>';
+  CampaignMonitor.apiKey = 'ABCDE1234567890';
+
+  subscriber = new CampaignMonitor.Subscriber('myles@madpilot.com.au', 'Myles Eftos');
+  subscriber.unsubscribe('12345', function(result) {
+    equals(result.code, 100, "result.code");
+    equals(result.message, "Invalid API Key", "result.message");
+    equals(result.success, false, "success");
+  });
+
+  xmlDoc = mockedXHR.bodyAsXML();
+  body = xmlDoc.evaluate('/soap:Envelope/soap:Body/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
+  equals(body.iterateNext().tagName, "Subscriber.Unsubscribe", "Remote Method called");
+  body = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
+  while(res = body.iterateNext()) {
+    switch(res.tagName) {
+      case 'ApiKey':
+        equals(res.textContent, 'ABCDE1234567890', 'API Key');
+        break;
+      case 'ListID':
+        equals(res.textContent, '12345', 'List ID');
+        break;
+      case 'email':
+        equals(res.textContent, 'myles@madpilot.com.au', 'Email');
+        break;
+    }
+  }
+  expect(7);
+});
+
+
