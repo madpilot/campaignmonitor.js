@@ -7,13 +7,19 @@ It uses (and bundles a slightly modified version of) Suds: http://github.com/kwh
 
 It is heavily based on the campaigning Ruby gem: http://github.com/gnumarcelo/campaigning
 
-# # Usage
+## Usage
  
-  CampaignMonitor.apiKey = 'ABCDE1234567890';
-  subscriber = new CampaignMonitor.Subscriber('jon@my-email.com', 'Jon Smith');
-  var listId = 54321;
-  subscriber.add(listId);
+    CampaignMonitor.apiKey = 'ABCDE1234567890';
+    subscriber = new CampaignMonitor.Subscriber('jon@my-email.com', 'Jon Smith');
+    var listId = 54321;
+    subscriber.add(listId, null, function(result) {
+      if(result.success) {
+        alert('Subscribed!');
+      } else {
+        alert(result.message);
+      }
+    });
 
-# # Todo
+## Todo
 
 Implement more of the API, finish documentation. Come back later, or get forking!
