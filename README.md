@@ -7,6 +7,12 @@ It uses (and bundles a slightly modified version of) Suds: http://github.com/kwh
 
 It is heavily based on the campaigning Ruby gem: http://github.com/gnumarcelo/campaigning
 
+## Setup
+
+If you just wish to use the library, include http://github.com/madpilot/campaignmonitor.js/raw/master/build/campaignmonitor.min.js in you application
+
+If you want to help with development, fork this repo, and get coding.
+
 ## Usage
  
     CampaignMonitor.apiKey = 'ABCDE1234567890';
