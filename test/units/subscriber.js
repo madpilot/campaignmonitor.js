@@ -24,10 +24,10 @@ test("Successful Add", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'SubscriberCustomField':
@@ -61,7 +61,7 @@ test("Failed Add", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
       case 'name':
@@ -99,10 +99,10 @@ test("Successful Add With Custom Fields", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'CustomFields':
@@ -152,10 +152,10 @@ test("Failed Add With Customer Fields", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'CustomFields':
@@ -215,7 +215,7 @@ test("Successful AddAndResubscribe", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
       case 'name':
@@ -252,10 +252,10 @@ test("Failed AddAndResubscribe", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'SubscriberCustomField':
@@ -290,10 +290,10 @@ test("Successful AddAndResubscribe With Custom Fields", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'CustomFields':
@@ -343,10 +343,10 @@ test("Failed AddAndResubscribe With Customer Fields", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
-      case 'name':
+      case 'Name':
         equals(res.textContent, 'Myles Eftos', 'Name');
         break
       case 'CustomFields':
@@ -406,7 +406,7 @@ test("Successful Unsubscribe", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
     }
@@ -438,7 +438,7 @@ test("Failed Unsubscribe", function() {
       case 'ListID':
         equals(res.textContent, '12345', 'List ID');
         break;
-      case 'email':
+      case 'Email':
         equals(res.textContent, 'myles@madpilot.com.au', 'Email');
         break;
     }
