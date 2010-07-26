@@ -133,6 +133,27 @@ var CampaignMonitor = {
       default:
         null
     }
+  },
+
+  parseResult: function(xmlDoc, callback) {
+    var callback = callback || function() {};
+
+    var result = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
+    var ret = { code: null, message: null, success: false }
+    
+    while(res = result.iterateNext()) {
+      switch(res.tagName) {
+        case "Code":
+          ret.code = parseInt(res.textContent);
+          ret.success = (ret.code == 0);
+          break;
+        case "Message":
+          ret.message = res.textContent;
+          break;
+      }
+    }
+    
+    callback(ret);
   }
 };
 CampaignMonitor.Subscriber = function(emailAddress, name, date, state, customFields, opts) {
@@ -143,44 +164,29 @@ CampaignMonitor.Subscriber = function(emailAddress, name, date, state, customFie
   this.state = state;
   this.customFields = customFields;
   this.opts = opts;
+
+  this.buildCustomFields = function(customFields) {
+    fields = [];
+    for(key in customFields) {
+      fields.push({ 'SubscriberCustomField': { 'Key': key, 'Value': customFields[key] } });
+    }
+    return fields;
+  };
 };
 
 CampaignMonitor.Subscriber.prototype.add = function(listID, customFields, callback) {
   params = {
     'ApiKey': this.apiKey,
     'ListID': listID,
-    'email': this.emailAddress,
-    'name': this.name
+    'Email': this.emailAddress,
+    'Name': this.name
   }
-
-  var callback = callback || function() {};
 
   var soap = CampaignMonitor.soap();
-  var parseResult = function(xmlDoc) {
-    var result = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
-    var ret = { code: null, message: null, success: false }
-    
-    while(res = result.iterateNext()) {
-      switch(res.tagName) {
-        case "Code":
-          ret.code = parseInt(res.textContent);
-          ret.success = (ret.code == 0);
-          break;
-        case "Message":
-          ret.message = res.textContent;
-          break;
-      }
-    }
-    
-    callback(ret);
-  }
 
+  parseResult = function(result) { CampaignMonitor.parseResult(result, callback) };
   if(customFields != null) {
-    fields = [];
-    for(key in customFields) {
-      fields.push({ 'SubscriberCustomField': { 'Key': key, 'Value': customFields[key] } });
-    }
-    params['CustomFields'] = fields;
+    params['CustomFields'] = this.buildCustomFields(customFields);
     CampaignMonitor._soap.invoke("Subscriber.AddWithCustomFields", params, parseResult);
   } else {
     CampaignMonitor._soap.invoke("Subscriber.Add", params, parseResult);
@@ -191,38 +197,15 @@ CampaignMonitor.Subscriber.prototype.addAndResubscribe = function(listID, custom
   params = {
     'ApiKey': this.apiKey,
     'ListID': listID,
-    'email': this.emailAddress,
-    'name': this.name
+    'Email': this.emailAddress,
+    'Name': this.name
   }
-
-  var callback = callback || function() {};
 
   var soap = CampaignMonitor.soap();
-  var parseResult = function(xmlDoc) {
-    var result = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
-    var ret = { code: null, message: null, success: false }
-    
-    while(res = result.iterateNext()) {
-      switch(res.tagName) {
-        case "Code":
-          ret.code = parseInt(res.textContent);
-          ret.success = (ret.code == 0);
-          break;
-        case "Message":
-          ret.message = res.textContent;
-          break;
-      }
-    }
-    
-    callback(ret);
-  }
+  parseResult = function(result) { CampaignMonitor.parseResult(result, callback) };
 
   if(customFields != null) {
-    fields = [];
-    for(key in customFields) {
-      fields.push({ 'SubscriberCustomField': { 'Key': key, 'Value': customFields[key] } });
-    }
-    params['CustomFields'] = fields;
+    params['CustomFields'] = this.buildCustomFields(customFields);
     CampaignMonitor._soap.invoke("Subscriber.AddAndResubscribeWithCustomFields", params, parseResult);
   } else {
     CampaignMonitor._soap.invoke("Subscriber.AddAndResubscribe", params, parseResult);
@@ -233,32 +216,10 @@ CampaignMonitor.Subscriber.prototype.unsubscribe = function(listID, callback) {
   params = {
     'ApiKey': this.apiKey,
     'ListID': listID,
-    'email': this.emailAddress
+    'Email': this.emailAddress
   }
-
-  var callback = callback || function() {};
-
+  
   var soap = CampaignMonitor.soap();
-  var parseResult = function(xmlDoc) {
-    var result = xmlDoc.evaluate('/soap:Envelope/soap:Body/*/*/*', xmlDoc, CampaignMonitor.resolver, XPathResult.ANY_TYPE, null);
-    var ret = { code: null, message: null, success: false }
-    
-    while(res = result.iterateNext()) {
-      switch(res.tagName) {
-        case "Code":
-          ret.code = parseInt(res.textContent);
-          ret.success = (ret.code == 0);
-          break;
-        case "Message":
-          ret.message = res.textContent;
-          break;
-      }
-    }
-    
-    callback(ret);
-  }
-
+  parseResult = function(result) { CampaignMonitor.parseResult(result, callback) };
   CampaignMonitor._soap.invoke("Subscriber.Unsubscribe", params, parseResult);
 };
-
-
